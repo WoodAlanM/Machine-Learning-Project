@@ -35,7 +35,9 @@ ELECTIVES_LIST = ["Spanish", "French", "Weight Lifting",
 columns = []
 
 df = pd.DataFrame(columns=["Student_id", "Age_at_year_4", "Year_1_Classes",
-                               "Year_2_Classes", "Year_3_Classes", "Year_4_Classes"])
+                           "Year_2_Classes", "Year_3_Classes", "Year_4_Classes",
+                           "Year_1_Grades", "Year_2_Grades", "Year_3_Grades", "Year_4_Grades",])
+
 
 def make_student_csv():
     year_1 = []
@@ -43,9 +45,7 @@ def make_student_csv():
     year_3 = []
     year_4 = []
 
-
-
-    student_id_number = 0
+    student_id_number = 1
 
     for i in range(1, 900):
         # Age at year_4
@@ -222,7 +222,11 @@ def make_student_csv():
             year_1_as_string,
             year_2_as_string,
             year_3_as_string,
-            year_4_as_string
+            year_4_as_string,
+            "",
+            "",
+            "",
+            "",
         ]
 
         # Increment student number
@@ -237,12 +241,41 @@ def make_student_csv():
         year_3.clear()
         year_4.clear()
 
+    # Grades part
+    year_1_grades = []
+    year_2_grades = []
+    year_3_grades = []
+    year_4_grades = []
+
+    for j in range(1, 900):
+        for i in range(7):
+            year_1_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
+            year_2_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
+            year_3_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
+            year_4_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
+
+        year_1_grades_as_string = ', '.join(year_1_grades)
+        year_2_grades_as_string = ', '.join(year_2_grades)
+        year_3_grades_as_string = ', '.join(year_3_grades)
+        year_4_grades_as_string = ', '.join(year_4_grades)
+
+        df.loc[df['Student_id'] == j, 'Year_1_Grades'] = year_1_grades_as_string
+        df.loc[df['Student_id'] == j, 'Year_2_Grades'] = year_2_grades_as_string
+        df.loc[df['Student_id'] == j, 'Year_3_Grades'] = year_3_grades_as_string
+        df.loc[df['Student_id'] == j, 'Year_4_Grades'] = year_4_grades_as_string
+
+        year_1_grades_as_string = ""
+        year_2_grades_as_string = ""
+        year_3_grades_as_string = ""
+        year_4_grades_as_string = ""
+
+        year_1_grades.clear()
+        year_2_grades.clear()
+        year_3_grades.clear()
+        year_4_grades.clear()
+
     # # Save to csv file
-    # df.to_csv("students.csv", index=False)
-
-
-def add_grades_to_csv():
-
+    df.to_csv("students.csv", index=False)
 
 
 if __name__ == "__main__":
