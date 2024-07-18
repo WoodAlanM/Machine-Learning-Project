@@ -36,7 +36,11 @@ columns = []
 
 df = pd.DataFrame(columns=["Student_id", "Age_at_year_4", "Year_1_Classes",
                            "Year_2_Classes", "Year_3_Classes", "Year_4_Classes",
-                           "Year_1_Grades", "Year_2_Grades", "Year_3_Grades", "Year_4_Grades",])
+                           "Year_1_Grades", "Year_2_Grades", "Year_3_Grades", "Year_4_Grades",
+                           "Year_1_Absences", "Year_2_Absences", "Year_3_Absences", "Year_4_Absences",
+                           "Year_1_Late_HW", "Year_2_Late_HW", "Year_3_Late_HW", "Year_4_Late_HW",
+                           "Year_1_Participation", "Year_2_Participation", "Year_3_Participation",
+                           "Year_4_Participation"])
 
 
 def make_student_csv():
@@ -47,7 +51,7 @@ def make_student_csv():
 
     student_id_number = 1
 
-    for i in range(1, 900):
+    for i in range(1, 1001):
         # Age at year_4
         student_age = random.randint(17, 20)
 
@@ -227,6 +231,18 @@ def make_student_csv():
             "",
             "",
             "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
         ]
 
         # Increment student number
@@ -247,7 +263,8 @@ def make_student_csv():
     year_3_grades = []
     year_4_grades = []
 
-    for j in range(1, 900):
+    # Add random grades for each class for regular students
+    for j in range(1, 901):
         for i in range(7):
             year_1_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
             year_2_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
@@ -273,6 +290,142 @@ def make_student_csv():
         year_2_grades.clear()
         year_3_grades.clear()
         year_4_grades.clear()
+
+    # Adds grades for possible failing students
+    for j in range(901, 1001):
+        for i in range(7):
+            year_1_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
+            year_2_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
+            year_3_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
+            year_4_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
+
+        year_1_grades_as_string = ', '.join(year_1_grades)
+        year_2_grades_as_string = ', '.join(year_2_grades)
+        year_3_grades_as_string = ', '.join(year_3_grades)
+        year_4_grades_as_string = ', '.join(year_4_grades)
+
+        df.loc[df['Student_id'] == j, 'Year_1_Grades'] = year_1_grades_as_string
+        df.loc[df['Student_id'] == j, 'Year_2_Grades'] = year_2_grades_as_string
+        df.loc[df['Student_id'] == j, 'Year_3_Grades'] = year_3_grades_as_string
+        df.loc[df['Student_id'] == j, 'Year_4_Grades'] = year_4_grades_as_string
+
+        year_1_grades_as_string = ""
+        year_2_grades_as_string = ""
+        year_3_grades_as_string = ""
+        year_4_grades_as_string = ""
+
+        year_1_grades.clear()
+        year_2_grades.clear()
+        year_3_grades.clear()
+        year_4_grades.clear()
+
+    # This will add absences for regular students
+    year_1_absences = ""
+    year_2_absences = ""
+    year_3_absences = ""
+    year_4_absences = ""
+
+    for j in range(1, 901):
+        for i in range(7):
+            year_1_absences = str(random.randint(0, 10))
+            year_2_absences = str(random.randint(0, 10))
+            year_3_absences = str(random.randint(0, 10))
+            year_4_absences = str(random.randint(0, 10))
+
+        df.loc[df['Student_id'] == j, 'Year_1_Absences'] = year_1_absences
+        df.loc[df['Student_id'] == j, 'Year_2_Absences'] = year_2_absences
+        df.loc[df['Student_id'] == j, 'Year_3_Absences'] = year_3_absences
+        df.loc[df['Student_id'] == j, 'Year_4_Absences'] = year_4_absences
+
+    # This will add absences for possible failing students
+    year_1_absences = ""
+    year_2_absences = ""
+    year_3_absences = ""
+    year_4_absences = ""
+
+    for j in range(901, 1001):
+        for i in range(7):
+            year_1_absences = str(random.randint(0, 20))
+            year_2_absences = str(random.randint(0, 20))
+            year_3_absences = str(random.randint(0, 20))
+            year_4_absences = str(random.randint(0, 20))
+
+        df.loc[df['Student_id'] == j, 'Year_1_Absences'] = year_1_absences
+        df.loc[df['Student_id'] == j, 'Year_2_Absences'] = year_2_absences
+        df.loc[df['Student_id'] == j, 'Year_3_Absences'] = year_3_absences
+        df.loc[df['Student_id'] == j, 'Year_4_Absences'] = year_4_absences
+
+    # This will add late homeworks for regular students
+    year_1_late_hw = ""
+    year_2_late_hw = ""
+    year_3_late_hw = ""
+    year_4_late_hw = ""
+
+    for j in range(1, 901):
+        for i in range(7):
+            year_1_late_hw = str(random.randint(0, 10))
+            year_2_late_hw = str(random.randint(0, 10))
+            year_3_late_hw = str(random.randint(0, 10))
+            year_4_late_hw = str(random.randint(0, 10))
+
+        df.loc[df['Student_id'] == j, 'Year_1_Late_HW'] = year_1_late_hw
+        df.loc[df['Student_id'] == j, 'Year_2_Late_HW'] = year_2_late_hw
+        df.loc[df['Student_id'] == j, 'Year_3_Late_HW'] = year_3_late_hw
+        df.loc[df['Student_id'] == j, 'Year_4_Late_HW'] = year_4_late_hw
+
+    # This will add late homeworks for possible failing students
+    year_1_late_hw = ""
+    year_2_late_hw = ""
+    year_3_late_hw = ""
+    year_4_late_hw = ""
+
+    for j in range(901, 1001):
+        for i in range(7):
+            year_1_late_hw = str(random.randint(0, 30))
+            year_2_late_hw = str(random.randint(0, 30))
+            year_3_late_hw = str(random.randint(0, 30))
+            year_4_late_hw = str(random.randint(0, 30))
+
+        df.loc[df['Student_id'] == j, 'Year_1_Late_HW'] = year_1_late_hw
+        df.loc[df['Student_id'] == j, 'Year_2_Late_HW'] = year_2_late_hw
+        df.loc[df['Student_id'] == j, 'Year_3_Late_HW'] = year_3_late_hw
+        df.loc[df['Student_id'] == j, 'Year_4_Late_HW'] = year_4_late_hw
+
+    # This will add class participation
+    year_1_participation = ""
+    year_2_participation = ""
+    year_3_participation = ""
+    year_4_participation = ""
+
+    for j in range(1, 901):
+        for i in range(7):
+            year_1_participation = str(random.randint(6, 10))
+            year_2_participation = str(random.randint(6, 10))
+            year_3_participation = str(random.randint(6, 10))
+            year_4_participation = str(random.randint(6, 10))
+
+        df.loc[df['Student_id'] == j, 'Year_1_Participation'] = year_1_participation
+        df.loc[df['Student_id'] == j, 'Year_2_Participation'] = year_2_participation
+        df.loc[df['Student_id'] == j, 'Year_3_Participation'] = year_3_participation
+        df.loc[df['Student_id'] == j, 'Year_4_Participation'] = year_4_participation
+
+    # This will add class participation for possible failing students
+    year_1_participation = ""
+    year_2_participation = ""
+    year_3_participation = ""
+    year_4_participation = ""
+
+    for j in range(901, 1001):
+        for i in range(7):
+            year_1_participation = str(random.randint(0, 6))
+            year_2_participation = str(random.randint(0, 6))
+            year_3_participation = str(random.randint(0, 6))
+            year_4_participation = str(random.randint(0, 6))
+
+        df.loc[df['Student_id'] == j, 'Year_1_Participation'] = year_1_participation
+        df.loc[df['Student_id'] == j, 'Year_2_Participation'] = year_2_participation
+        df.loc[df['Student_id'] == j, 'Year_3_Participation'] = year_3_participation
+        df.loc[df['Student_id'] == j, 'Year_4_Participation'] = year_4_participation
 
     # # Save to csv file
     df.to_csv("students.csv", index=False)
