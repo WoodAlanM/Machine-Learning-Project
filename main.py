@@ -3,7 +3,7 @@ import statistics as stat
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+
 import seaborn
 
 data = pd.read_csv('students.csv')
@@ -29,13 +29,13 @@ def perform_elbow(features):
     plt.show()
 
 
-def perform_k_means():
-    features = averages_df[["Average_Grade", "Average_Absences", "Average_Late_HW"]]
+def perform_k_means_3d(list_of_features):
+    features = averages_df[list_of_features]
 
     # perform_elbow(features)
     # The elbow method seemed to establish that 4 clusters is the optimal number
 
-    optimal_clusters = 3
+    optimal_clusters = 4
 
     scaler = StandardScaler()
     scaled_data = scaler.fit_transform(averages_df)
@@ -48,8 +48,8 @@ def perform_k_means():
 
     for cluster in range(optimal_clusters):
         cluster_data = averages_df[averages_df["Cluster"] == cluster]
-        ax.scatter(cluster_data["Average_Grade"], cluster_data["Average_Absences"],
-                   cluster_data["Average_Late_HW"], label=f"Cluster {cluster}")
+        ax.scatter(cluster_data[list_of_features[0]], cluster_data[list_of_features[1]],
+                   cluster_data[list_of_features[2]], label=f"Cluster {cluster}")
 
     ax.set_xlabel("Average Grade")
     ax.set_ylabel("Average Absences")
@@ -57,6 +57,28 @@ def perform_k_means():
     ax.legend()
 
     plt.show()
+
+
+def perform_kmeans_2d(list_of_features):
+    features = averages_df[list_of_features]
+
+    selected_columns = averages_df[list_of_features]
+
+    scaler = StandardScaler()
+    scaled_features = scaler.fit_transform(selected_columns)
+
+    optimal_clusters = 4
+
+    kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
+    kmeans.fit(scaled_features)
+
+    selected_columns["Cluster"] = kmeans.labels_
+
+    #cluster_mean = selected_columns.groupby("Cluster").mean()
+
+    seaborn.pairplot(selected_columns, hue="Cluster", palette="tab10")
+    plt.show()
+
 
 def get_averages():
     for i in range(1, 1001):
@@ -134,4 +156,5 @@ def get_averages():
 
 if __name__ == "__main__":
     get_averages()
-    perform_k_means()
+    # perform_k_means_3d(["Average_Grade", "Average_Absences", "Average_Late_HW"])
+    perform_kmeans_2d(["Average_Grade", "Average_Absences"])
