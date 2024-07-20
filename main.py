@@ -157,4 +157,4 @@ def get_averages():
 if __name__ == "__main__":
     get_averages()
     # perform_k_means_3d(["Average_Grade", "Average_Absences", "Average_Late_HW"])
-    perform_kmeans_2d(["Average_Grade", "Average_Absences"])
+    #perform_kmeans_2d(["Average_Grade", "Average_Absences"])
