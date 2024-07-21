@@ -266,10 +266,10 @@ def make_student_csv():
     # Add random grades for each class for regular students
     for j in range(1, 901):
         for i in range(7):
-            year_1_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
-            year_2_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
-            year_3_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
-            year_4_grades.append(str(round(random.uniform(70.0, 100.0), 1)))
+            year_1_grades.append(str(round(random.uniform(60.0, 100.0), 1)))
+            year_2_grades.append(str(round(random.uniform(60.0, 100.0), 1)))
+            year_3_grades.append(str(round(random.uniform(60.0, 100.0), 1)))
+            year_4_grades.append(str(round(random.uniform(60.0, 100.0), 1)))
 
         year_1_grades_as_string = ', '.join(year_1_grades)
         year_2_grades_as_string = ', '.join(year_2_grades)
@@ -294,10 +294,10 @@ def make_student_csv():
     # Adds grades for possible failing students
     for j in range(901, 1001):
         for i in range(7):
-            year_1_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
-            year_2_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
-            year_3_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
-            year_4_grades.append(str(round(random.uniform(50.0, 100.0), 1)))
+            year_1_grades.append(str(round(random.uniform(40.0, 100.0), 1)))
+            year_2_grades.append(str(round(random.uniform(40.0, 100.0), 1)))
+            year_3_grades.append(str(round(random.uniform(40.0, 100.0), 1)))
+            year_4_grades.append(str(round(random.uniform(40.0, 100.0), 1)))
 
         year_1_grades_as_string = ', '.join(year_1_grades)
         year_2_grades_as_string = ', '.join(year_2_grades)
