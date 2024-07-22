@@ -1,17 +1,12 @@
 import pandas as pd
-import statistics as stat
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 FEATURES_FOR_CONVERSION = ["Year_1_Grades", "Year_2_Grades", "Year_3_Grades",
                            "Year_1_Absences", "Year_2_Absences", "Year_3_Absences",
                            "Year_1_Late_HW", "Year_2_Late_HW", "Year_3_Late_HW",
                            "Year_1_Participation", "Year_2_Participation", "Year_3_Participation"]
-
-data = pd.read_csv("students.csv")
-
-print(data.head())
 
 
 def float_features(df_row):
@@ -44,22 +39,6 @@ def separate_lists(df_row):
     return df_row
 
 
-# Float all the values in the dataframe
-data = data.apply(float_features, axis=1)
-
-# Add a column for each value in the grade list for each year
-data = data.apply(separate_lists, axis=1)
-
-print(data.head())
-
-features = data[["Y1G0", "Y1G1", "Y1G2", "Y1G3", "Y1G4", "Y1G5", "Y1G6",
-                 "Y2G0", "Y2G1", "Y2G2", "Y2G3", "Y2G4", "Y2G5", "Y2G6",
-                 "Y3G0", "Y3G1", "Y3G2", "Y3G3", "Y3G4", "Y3G5", "Y3G6",
-                 "Year_1_Absences", "Year_2_Absences", "Year_3_Absences",
-                 "Year_1_Late_HW", "Year_2_Late_HW", "Year_3_Late_HW",
-                 "Year_1_Participation", "Year_2_Participation", "Year_3_Participation"]]
-
-
 def find_average_grades(df_row):
     total = 0
     for i in range(1, 5):
@@ -71,55 +50,65 @@ def find_average_grades(df_row):
     return df_row
 
 
-data = data.apply(find_average_grades, axis=1)
+def rf_classifier_access(minimum_passing_grade, choice):
+    data = pd.read_csv("students.csv")
 
-# Get third year cumulative average grade
-data["cumulative_average_year_4"] = (
-    data["Average_grade_year_1"] +
-    data["Average_grade_year_2"] +
-    data["Average_grade_year_3"] +
-    data["Average_grade_year_4"]
-) / 4
+    # Float all the values in the dataframe
+    data = data.apply(float_features, axis=1)
 
-# If cumulative average for year 4 is less than 70 mark with 1 for fail 0 for pass
-data["Pass_Fail_Year_4"] = (data["cumulative_average_year_4"] < 70).astype(int)
+    # Add a column for each value in the grade list for each year
+    data = data.apply(separate_lists, axis=1)
 
-target = data["Pass_Fail_Year_4"]
+    features = data[["Y1G0", "Y1G1", "Y1G2", "Y1G3", "Y1G4", "Y1G5", "Y1G6",
+                     "Y2G0", "Y2G1", "Y2G2", "Y2G3", "Y2G4", "Y2G5", "Y2G6",
+                     "Y3G0", "Y3G1", "Y3G2", "Y3G3", "Y3G4", "Y3G5", "Y3G6",
+                     "Year_1_Absences", "Year_2_Absences", "Year_3_Absences",
+                     "Year_1_Late_HW", "Year_2_Late_HW", "Year_3_Late_HW",
+                     "Year_1_Participation", "Year_2_Participation", "Year_3_Participation"]]
 
-# Split data for training and testing.
-X_train, X_test, Y_train, Y_test, IDS_Train, IDS_Test = (
-    train_test_split(features, target, data["Student_id"], test_size=0.2, random_state=42))
+    data = data.apply(find_average_grades, axis=1)
 
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # Get third year cumulative average grade
+    data["cumulative_average_year_4"] = (
+        data["Average_grade_year_1"] +
+        data["Average_grade_year_2"] +
+        data["Average_grade_year_3"] +
+        data["Average_grade_year_4"]
+    ) / 4
 
-model.fit(X_train, Y_train)
+    # If cumulative average for year 4 is less than 70 mark with 1 for fail 0 for pass
+    data["Pass_Fail_Year_4"] = (data["cumulative_average_year_4"] < int(minimum_passing_grade)).astype(int)
 
-prediction = model.predict(X_test)
+    target = data["Pass_Fail_Year_4"]
 
-results = pd.DataFrame({
-    "Student ID": IDS_Test,
-    "True Label": Y_test,
-    "Prediction Label": prediction,
-})
+    # Split data for training and testing.
+    X_train, X_test, Y_train, Y_test, IDS_Train, IDS_Test = (
+        train_test_split(features, target, data["Student_id"], test_size=0.2, random_state=42))
 
-students_to_check = results[results["Prediction Label"] == 1]
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
 
-print("These are the students at risk of failure:")
-print(students_to_check)
+    model.fit(X_train, Y_train)
 
-accuracy = accuracy_score(Y_test, prediction)
-precision = precision_score(Y_test, prediction)
-recall = recall_score(Y_test, prediction)
-roc_auc = roc_auc_score(Y_test, prediction)
+    prediction = model.predict(X_test)
 
-print(f"Accuracy: {accuracy}")
-print(f"Precision: {precision}")
-print(f"Recall: {recall}")
-print(classification_report(Y_test, prediction))
+    results = pd.DataFrame({
+        "Student ID": IDS_Test,
+        # This value can be used to determine the validity of the prediction.
+        # Not necessary with the gui version of the program
+        # "True Label": Y_test,
+        "Prediction Label": prediction,
+    })
 
+    students_to_check = results[results["Prediction Label"] == 1]
 
+    if int(choice) == 1:
+        print("These are the students at risk of failure:")
+        print(students_to_check)
+    else:
+        accuracy = accuracy_score(Y_test, prediction)
+        precision = precision_score(Y_test, prediction)
+        recall = recall_score(Y_test, prediction)
 
-
-
-
-
+        print(f"Accuracy: {accuracy}")
+        print(f"Precision: {precision}")
+        print(f"Recall: {recall}")
