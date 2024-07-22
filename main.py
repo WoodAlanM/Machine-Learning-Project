@@ -252,9 +252,9 @@ def perform_k_means_3d(list_of_features):
         ax.scatter(cluster_data[list_of_features[0]], cluster_data[list_of_features[1]],
                    cluster_data[list_of_features[2]], label=f"Cluster {cluster}")
 
-    ax.set_xlabel("Average Grade")
-    ax.set_ylabel("Average Absences")
-    ax.set_zlabel("Average Late Homework")
+    ax.set_xlabel(list_of_features[0])
+    ax.set_ylabel(list_of_features[1])
+    ax.set_zlabel(list_of_features[2])
     ax.legend()
 
     plt.show()
